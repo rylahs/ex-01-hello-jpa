@@ -2,11 +2,12 @@ package hellojpa;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-public class Member extends BaseEntity{
+public class Member {
 
     @Id
     @GeneratedValue
@@ -15,12 +16,35 @@ public class Member extends BaseEntity{
     @Column(name = "username")
     private String username;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn
-    private Team team;
-//    @Column(name = "TEAM_ID")
-//    private long teamId;
 
+    // 기간 Period
+    @Embedded
+    private Period workPeriod;
+
+    // 주소
+    @Embedded
+    private Address homeAddress;
+
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOOD", joinColumns =
+        @JoinColumn(name = "MEMBER_ID")
+    )
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "ADDRESS", joinColumns =
+        @JoinColumn(name = "MEMBER_ID")
+    )
+    private List<Address> addressHistory = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getUsername() {
         return username;
@@ -30,20 +54,19 @@ public class Member extends BaseEntity{
         this.username = username;
     }
 
-    // 팀이 하나 Member 입장이 다수
-    public Long getId() {
-        return id;
+    public Period getWorkPeriod() {
+        return workPeriod;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setWorkPeriod(Period wordPeriod) {
+        this.workPeriod = wordPeriod;
     }
 
-    public Team getTeam() {
-        return team;
+    public Address getHomeAddress() {
+        return homeAddress;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
     }
 }
